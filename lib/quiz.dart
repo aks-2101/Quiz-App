@@ -1,44 +1,78 @@
-import 'package:demo/questions_screen.dart';
 import 'package:flutter/material.dart';
 import 'start_screen.dart';
+import 'questions_screen.dart';
+import 'package:demo/data/questions.dart';
+import 'results_screen.dart';
 
-
-class Quiz extends StatefulWidget{
+class Quiz extends StatefulWidget {
   const Quiz({super.key});
+
   @override
-  State <Quiz> createState() {
+  State<Quiz> createState() {
     return _QuizState();
   }
 }
 
-class _QuizState extends State <Quiz> {
-  
-  Widget? activeScreen ; 
+class _QuizState extends State<Quiz> {
+  List<String> _selectedAnswers = [];
+  var _activeScreen = 'start-screen';
 
-  @override
-  void initState() {
-    activeScreen= StartScreen(switchScreen);
-    super.initState();
-  }
-  void switchScreen(){
+  void _switchScreen() {
     setState(() {
-      activeScreen = const QuestionsScreen();
+      _activeScreen = 'questions-screen';
+    });
+  }
+
+  void _chooseAnswer(String answer) {
+    _selectedAnswers.add(answer);
+
+    if (_selectedAnswers.length == question.length) {
+      setState(() {
+        _selectedAnswers=[];
+        _activeScreen = 'results-screen';
+      });
+    }
+  }
+
+  void restartQuiz() {
+    setState(() {
+      _activeScreen = 'questions-screen';
     });
   }
 
   @override
-  Widget build(context){
-    return  MaterialApp(
+  Widget build(context) {
+    Widget screenWidget = StartScreen(_switchScreen);
+
+    if (_activeScreen == 'questions-screen') {
+      screenWidget = QuestionsScreen(
+        onSelectAnswer: _chooseAnswer,
+      );
+    }
+
+    if (_activeScreen == 'results-screen') {
+      screenWidget = ResultsScreen(
+        chosenAnswers: _selectedAnswers,
+        onRestart: restartQuiz,
+      );
+    }
+
+    return MaterialApp(
       home: Scaffold(
         body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: [
-                Color.fromARGB(255, 34, 13, 71),
-                Color.fromARGB(255, 25, 4, 46),
-              ], begin: Alignment.topLeft, end: Alignment.bottomRight),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(255, 78, 13, 151),
+                Color.fromARGB(255, 107, 15, 168),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
-            child: activeScreen,
+          ),
+          child: screenWidget,
+        ),
       ),
-    ));
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 // ignore: must_be_immutable
 class StartScreen extends StatelessWidget {
@@ -15,9 +16,12 @@ class StartScreen extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          const Text(
+          Text(
             "Want to have a quiz",
-            style: TextStyle(color: Colors.white, fontSize: 20),
+            style: GoogleFonts.kanit(
+              color: Colors.white,
+              fontSize: 20,
+            ),
           ),
           const SizedBox(
             height: 30,
